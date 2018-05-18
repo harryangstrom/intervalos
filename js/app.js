@@ -83,7 +83,7 @@ window.onload = function() {
 	ch.disabled = true;
 	pl.disabled = true;
 	punt.innerHTML = "<b>" + puntos + " PUNTOS</b>";
-	console.log(arrNotas[4][0 + 1][1] == "");
+	// console.log(arrNotas[4][0 + 1][1] == "");
 
 	cargaSonidosNot();
 	// cargaNotas();
@@ -178,8 +178,10 @@ window.onload = function() {
 	}, 50);*/
 
 	onOff.addEventListener("click", function() {
+		// inicializa los valores random para la nota inicial de 0 - 11
+		// y para la nota final de 0 - 12. Consideramos válido el unísono
 		inicio = Math.floor(Math.random() * 12);
-		index = Math.floor(Math.random() * 12);
+		index = Math.floor(Math.random() * 13);
 		console.log("index: " + index);
 		console.log("inicio: " + inicio);
 		var getSound1 = new XMLHttpRequest();
@@ -192,7 +194,7 @@ window.onload = function() {
 		};
 		getSound1.send();
 		var getSound2= new XMLHttpRequest();
-		getSound2.open("get",intSounds[index + inicio + 1],true);
+		getSound2.open("get",intSounds[index + inicio],true);
 		getSound2.responseType = "arraybuffer";
 		getSound2.onload = function() {
 			audioContext.decodeAudioData(getSound2.response, function(buffer) {
@@ -227,7 +229,7 @@ window.onload = function() {
 
 	botb.addEventListener("click", function() {
 		debplay(audioBuffer2, 0);
-		txtdeb2.innerHTML = intSounds[index + inicio + 1];
+		txtdeb2.innerHTML = intSounds[index + inicio];
 	});		
 
 
@@ -429,14 +431,14 @@ window.onload = function() {
 	function queNotas() {
 		var notaA, notaB;
 		var notAB = [];
-		notaB = arrNotas[inicio][index + 1][0];
+		notaB = arrNotas[inicio][index][0];
 		console.log("notaB");
 		console.log(notaB);
 		if (notaB > "") {
 			notaA = arrNotas[inicio][0][0];
 		}
 		else {
-			notaB = arrNotas[inicio][index + 1][1];
+			notaB = arrNotas[inicio][index][1];
 			notaA = arrNotas[inicio][0][1];
 		}
 		notAB[0] = notaA;
