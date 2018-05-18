@@ -1,4 +1,6 @@
 "use strict";
+
+// Permite detectar si es un mac para que funcione webaudio API
 if ('webkitAudioContext' in window) {
 	var audioContext = new webkitAudioContext();
 	console.log("webkit");
