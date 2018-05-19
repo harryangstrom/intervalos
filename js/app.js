@@ -75,11 +75,11 @@ window.onload = function() {
 
 
 
-
+/*
 	for (var i = 0; i < waveformTypes.length; i++) {
 		waveformTypes[i].addEventListener("click", select, false);
 	}
-
+*/
 	ch.disabled = true;
 	pl.disabled = true;
 	punt.innerHTML = "<b>" + puntos + " PUNTOS</b>";
