@@ -92,7 +92,7 @@ window.onload = function() {
 
 
 
-
+/*
 	function cargaSonidosInt() {
 		intSounds[0] = "intervalos/2m.mp3";
 		intSounds[1] = "intervalos/2Ma.mp3";
@@ -107,7 +107,7 @@ window.onload = function() {
 		intSounds[10] = "intervalos/7Ma.mp3";
 		intSounds[11] = "intervalos/8J.mp3";
 	}
-
+*/
 	function cargaSonidosNot() {
 		intSounds[0] = "intervalos/Notas/00A2.mp3";
 		intSounds[1] = "intervalos/Notas/01As2.mp3";
