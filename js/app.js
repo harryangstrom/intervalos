@@ -32,9 +32,9 @@ window.onload = function() {
 	var inicio;
 	var index; // Indice que contiene el valor random del intervalo a reproducir
 	var audioBuffer1, audioBuffer2; // buffers para almacenar el sonido a reproducir
-	var selectedWaveform = "sawtooth";
-	var waveformTypes = document.getElementsByTagName("li");
-	var osc = false;
+//	var selectedWaveform = "sawtooth";
+//	var waveformTypes = document.getElementsByTagName("li");
+//	var osc = false;
 
 
 	var VF = Vex.Flow;
