@@ -41,13 +41,18 @@ window.onload = function() {
 
 // Create an SVG renderer and attach it to the DIV element named "boo".
 	var div = document.getElementById("pentagrama");
+	var div2 = document.getElementById("pentagrama2");	
 	var renderer = new VF.Renderer(div, VF.Renderer.Backends.SVG);
+	var renderer2 = new VF.Renderer(div2, VF.Renderer.Backends.SVG);	
 
 // Configure the rendering context.
 	renderer.resize(500, 200);
+	renderer2.resize(500, 200);	
 	var context = renderer.getContext();
+	var context2 = renderer2.getContext();	
 	var stave;
 	var group;
+	var group2;
 	var voice;
 
 	// El arrNotas es un array formado por 12 arrays (uno por cada nota de origen)
@@ -207,7 +212,9 @@ window.onload = function() {
 		intervalOptions.classList.remove('respuesta');			
 		res.innerHTML = " ";
 		context.closeGroup();
-		if (group) context.svg.removeChild(group);		
+		context2.closeGroup();		
+		if (group) context.svg.removeChild(group);	
+		if (group2) context2.svg.removeChild(group2);			
 //		context.svg.removeChild(group);
 		creaPentagrama();	
 	//	playback();
@@ -324,7 +331,9 @@ window.onload = function() {
 */
 	function creaPentagrama() {
 		group = context.openGroup();
+		group2 = context2.openGroup();		
 		context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+		context2.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");		
 		// Create a stave of width 400 at position 10, 40 on the canvas.
 		stave = new VF.Stave(10, 40, 400);
 		// Add a clef and time signature.
@@ -332,6 +341,7 @@ window.onload = function() {
 		stave.setClef("treble", "default", "8vb");		
 		// Connect it to the rendering context and draw!
 		stave.setContext(context).draw();
+		stave.setContext(context2).draw();		
 	}
 
 	function drawScore() {	
@@ -419,6 +429,7 @@ window.onload = function() {
 		var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 400);
 		// Render voice
 		voice.draw(context, stave);
+		voice.draw(context2, stave);		
 //		context.closeGroup();
 		// Then close the group: 
 		notAB = queNotas();
