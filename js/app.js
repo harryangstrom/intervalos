@@ -9,7 +9,163 @@ else {
 	var audioContext = new AudioContext();
 	console.log("normal");
 }
+
+
+
+function Pentagrama(donde) {
+	var penta = this;
+	penta.width = 500;
+	penta.height = 200;
+	var VF = Vex.Flow;
+	var ubicacion = document.getElementById(donde);
+	var renderer = new VF.Renderer(ubicacion, VF.Renderer.Backends.SVG);
+	renderer.resize(penta.width, penta.height);
+	var context = renderer.getContext();
+	var stave;
+	var group;
+	var voice;
+	var clave = "treble";
+	var timeSignature = "2/4";
+	var octava = "8vb";
+
+	penta.creaPentagrama = function () {
+		group = context.openGroup();
+		context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
+		// Create a stave of width 400 at position 10, 40 on the canvas.
+		stave = new VF.Stave(10, 40, 400);
+		// Add a clef and time signature.
+		stave.addClef(clave).addTimeSignature(timeSignature);
+		stave.setClef(clave, "default", octava);		
+		// Connect it to the rendering context and draw!
+		stave.setContext(context).draw();	
+	}
+
+	penta.closeGroup = function () {
+		context.closeGroup();	
+		if (group) context.svg.removeChild(group);	
+	}
+
+
+	penta.drawScore = function () {
+		var notAB = [];
+		notAB = queNotas();
+		console.log("notas en drawScore");
+		console.log(notAB[0]);
+		console.log(notAB[1]);
+		//debplay(audioBuffer1, 0);
+		if (ascdes.value == "Descendente") {
+			playback(audioBuffer2, audioBuffer1);
+			notAB[2] = notAB[0];
+			notAB[0] = notAB[1];
+			notAB[1] = notAB[2];
+		}
+		else {
+			playback(audioBuffer1, audioBuffer2);			
+		}		
+		if (notAB[0].charAt(1) == "b") {
+			console.log("not1b");
+			var not1 = [
+			new VF.StaveNote({clef: "treble", keys: [notAB[0]], duration: "q" }).
+			addAccidental(0, new VF.Accidental("b"))];
+		}
+		else if (notAB[0].charAt(1) == "#") {
+			console.log("not1#");
+			var not1 = [
+			new VF.StaveNote({clef: "treble", keys: [notAB[0]], duration: "q" }).
+			addAccidental(0, new VF.Accidental("#"))];
+		}
+		else {
+			console.log("not1");
+			var not1 = [			
+			new VF.StaveNote({clef: "treble", keys: [notAB[0]], duration: "q" })];
+		}
+
+		//debplay(audioBuffer2, 0.7);
+
+		if (notAB[1].charAt(1) == "b") {
+			console.log("not2b");
+			var not2 = [
+			new VF.StaveNote({clef: "treble", keys: [notAB[1]], duration: "q" }).
+			addAccidental(0, new VF.Accidental("b"))];
+		}
+		else if (notAB[1].charAt(1) == "#") {
+			console.log("not2#");
+			var not2 = [
+			new VF.StaveNote({clef: "treble", keys: [notAB[1]], duration: "q" }).
+			addAccidental(0, new VF.Accidental("#"))];
+		}
+		else {
+			console.log("not2");
+			var not2 = [
+			new VF.StaveNote({clef: "treble", keys: [notAB[1]], duration: "q" })];
+		}
+		
+/*
+		if (notas[a].length == 4) {
+			var not1 = [
+			new VF.StaveNote({clef: "treble", keys: [notas[a]], duration: "q" }).
+			addAccidental(0, new VF.Accidental("#"))];
+		}
+		else {
+			var not1 = [
+			new VF.StaveNote({clef: "treble", keys: [notas[a]], duration: "q" })];
+		}
+
+		if (notas[b].length == 4) {
+			var not2 = [
+			new VF.StaveNote({clef: "treble", keys: [notas[b]], duration: "q" }).
+			addAccidental(0, new VF.Accidental("#"))];
+		}
+		else {
+			var not2 = [
+			new VF.StaveNote({clef: "treble", keys: [notas[b]], duration: "q" })];
+		}
+
+		*/
+
+		voice = new VF.Voice({num_beats: 2,  beat_value: 4});
+		voice.addTickables(not1);
+		voice.addTickables(not2);
+
+		// Format and justify the notes to 400 pixels.
+		var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 400);
+		// Render voice
+		voice.draw(context, stave);
+		//voice.draw(context2, stave);		
+//		context.closeGroup();
+		// Then close the group: 
+		notAB = queNotas();
+		console.log(notAB[0]);
+		console.log(notAB[1]);
+		txtnotA.innerHTML = notAB[0];
+		txtnotB.innerHTML = notAB[1];
+	}
+
+	function queNotas() {
+		var notaA, notaB;
+		var notAB = [];
+		notaB = arrNotas[inicio][index][0];
+		console.log("notaB");
+		console.log(notaB);
+		if (notaB > "") {
+			notaA = arrNotas[inicio][0][0];
+		}
+		else {
+			notaB = arrNotas[inicio][index][1];
+			notaA = arrNotas[inicio][0][1];
+		}
+		notAB[0] = notaA;
+		notAB[1] = notaB;
+		return notAB;
+	}
+}
+
+
 window.onload = function() {
+	// Oculta div debug
+	divDebug.classList.add('hideDeb');
+}
+
 	var onOff = document.getElementById("on-off");
 	var pl = document.getElementById("play");
 	var ch = document.getElementById("check");
@@ -35,7 +191,7 @@ window.onload = function() {
 //	var selectedWaveform = "sawtooth";
 //	var waveformTypes = document.getElementsByTagName("li");
 //	var osc = false;
-
+/* Metodo sin constructor creaPentagrama VexFlow
 
 	var VF = Vex.Flow;
 
@@ -54,7 +210,7 @@ window.onload = function() {
 	var group;
 	var group2;
 	var voice;
-
+*/
 	// El arrNotas es un array formado por 12 arrays (uno por cada nota de origen)
 	// cada uno de esto 12 array tiene 13 arrays (uno por cada nota posible en cada intervalo)
 	// cada uno de estos últimos tiene dos valores, uno para el # y otro para el bemol
@@ -75,8 +231,7 @@ window.onload = function() {
 	[["g#/4","ab/4"],["a/4",""],["","bb/4"],["b/4",""],["","c/5"],["","db/5"],["d/5",""],["d#/5",""],["e/5",""],["","f/5"],["","gb/5"],["","g/5"],["g#/5",""]]
 	]
 
-	// Oculta div debug
-	divDebug.classList.add('hideDeb');	
+	
 
 
 
@@ -92,11 +247,18 @@ window.onload = function() {
 
 	cargaSonidosNot();
 	// cargaNotas();
+
+/* Metodo sin constructor creaPentagrama
 	creaPentagrama();
 	// drawScore();
 
+ */
 
-
+ //Metodo con constructor creaPentagrama
+	var pentagrama1 = new Pentagrama("pentagrama");
+	pentagrama1.creaPentagrama();
+	var pentagrama2 = new Pentagrama("pentagrama");
+	pentagrama2.creaPentagrama();
 /*
 	function cargaSonidosInt() {
 		intSounds[0] = "intervalos/2m.mp3";
@@ -211,12 +373,16 @@ window.onload = function() {
 		ascdes.disabled = true;
 		intervalOptions.classList.remove('respuesta');			
 		res.innerHTML = " ";
-		context.closeGroup();
-		context2.closeGroup();		
+		//metodo antiguo sin constructor
+/* 		context.closeGroup();
+		//context2.closeGroup();		
 		if (group) context.svg.removeChild(group);	
-		if (group2) context2.svg.removeChild(group2);			
-//		context.svg.removeChild(group);
-		creaPentagrama();	
+		//if (group2) context2.svg.removeChild(group2);			
+//		context.svg.removeChild(group); */
+		pentagrama1.closeGroup();
+		pentagrama1.creaPentagrama();	
+		pentagrama2.closeGroup();
+		pentagrama2.creaPentagrama();
 	//	playback();
 	});
 
@@ -265,7 +431,8 @@ window.onload = function() {
 			ch.disabled = true;
 			pl.disabled = true;
 			ascdes.disabled = false;			
-			drawScore();
+			pentagrama1.drawScore();
+			pentagrama2.drawScore();
 			a.options[index].selected = true;
 			intervalOptions.classList.add('respuesta');			
 			// drawScore(inicio, inicio + index + 1);
@@ -284,7 +451,8 @@ window.onload = function() {
 			ch.disabled = true;
 			pl.disabled = true;
 			ascdes.disabled = false;			
-			drawScore();
+			pentagrama1.drawScore();
+			pentagrama2.drawScore();			
 			// drawScore(inicio, inicio + index + 1);
 			intentos = 0;			
 		}
@@ -315,7 +483,11 @@ window.onload = function() {
 		playSound.start(audioContext.currentTime + t);
 	}	
 /*
-	function select() {
+	function select()		context.closeGroup();
+		//context2.closeGroup();		
+		if (group) context.svg.removeChild(group);	
+		//if (group2) context2.svg.removeChild(group2);			
+//		context.svg.removeChild(group); {
 		var selectedWaveformElement = document.getElementById(this.id);
 		// selectedWaveform = document.getElementById(this.id).id;
 		selectedWaveform = selectedWaveformElement.id;
@@ -329,7 +501,7 @@ window.onload = function() {
 		console.log(selectedWaveformElement);
 	}
 */
-	function creaPentagrama() {
+/* 	function creaPentagrama() {
 		group = context.openGroup();
 		group2 = context2.openGroup();		
 		context.setFont("Arial", 10, "").setBackgroundFillStyle("#eed");
@@ -341,8 +513,12 @@ window.onload = function() {
 		stave.setClef("treble", "default", "8vb");		
 		// Connect it to the rendering context and draw!
 		stave.setContext(context).draw();
-		stave.setContext(context2).draw();		
-	}
+		stave.setCont		context.closeGroup();
+		//context2.closeGroup();		
+		if (group) context.svg.removeChild(group);	
+		//if (group2) context2.svg.removeChild(group2);			
+//		context.svg.removeChild(group);ext(context2).draw();		
+	} */
 
 	function drawScore() {	
 		var notAB = [];
@@ -456,5 +632,5 @@ window.onload = function() {
 		notAB[1] = notaB;
 		return notAB;
 	}
-};
+//};
 
